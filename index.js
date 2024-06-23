@@ -1,17 +1,12 @@
 const express = require('express')
 const config = require('./config/config')
-const exphbs = require('express-handlebars');
+
+
 const app = express()
 
 
-const hbs = exphbs.create({
-    extname: 'hbs'
-});
-
-app.engine('hbs', hbs.engine);
-app.set('view engine', 'hbs');
-
-app.use(express.static('public'))
+// const expressConfig = require('./config/express')
+require('./config/express')(app)
 
 app.get('/', (req, res) => {
     res.render('home', { layout: false })
