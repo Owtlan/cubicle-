@@ -6,7 +6,10 @@ function setupExpress(app) {
     const hbs = exphbs.create({
         extname: 'hbs'
     });
+
+
     app.engine('hbs', hbs.engine);
+    
     app.set('view engine', 'hbs');
 
     app.use(express.static('public'))
