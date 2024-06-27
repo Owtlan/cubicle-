@@ -3,9 +3,9 @@ const productData = require('../data/productData')
 
 
 function getAll(query) {
-    // let products = productData.getAll();
+    let products = productData.getAll();
 
-    let products = Cube.getAll()
+    // let products = Cube.getAll()
 
 
     if (query.search) {
@@ -26,19 +26,14 @@ function getAll(query) {
 
 
 function getOne(id) {
-    // return productData.getOne(id)
-    return Cube.getOne(id)
+    return productData.getOne(id)
+    // return Cube.getOne(id)
 
 }
 
 
 function create(data) {
-    let cube = new Cube(
-        data.name,
-        data.description,
-        data.imageUrl,
-        data.difficultyLevel
-    )
+    let cube = new Cube(data)
 
     // return productData.create(cube)
 
