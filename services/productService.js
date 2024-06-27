@@ -1,4 +1,3 @@
-const uniqId = require('uniqid')
 const Cube = require('../models/Cube')
 const productData = require('../data/productData')
 
@@ -35,7 +34,6 @@ function getOne(id) {
 
 function create(data) {
     let cube = new Cube(
-        uniqId(),
         data.name,
         data.description,
         data.imageUrl,

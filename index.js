@@ -1,13 +1,22 @@
-const express = require('express')
-const config = require('./config/config')
+const express = require('express');
 
-const routes = require('./routes')
-const app = express()
+const dbConnect = require('./config/dbConfig');
+const routes = require('./routes');
+const expressConfig = require('./config/expressConfig');
+const handlebarsConfig = require('./config/handlebarsConfig');
+
+const app = express();
+expressConfig(app)
+handlebarsConfig(app)
+
+const PORT = 5000;
 
 
-// const expressConfig = require('./config/express')
-require('./config/express')(app)
 
-app.use(routes)
+dbConnect()
+    .then(() => console.log('DB Connected successfully'))
+    .catch(err => console.log('DB error: ', err));
 
-app.listen(config.PORT, () => console.log(`Server is running on port ${config.PORT}...`))
+app.use(routes);
+
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}...`));
