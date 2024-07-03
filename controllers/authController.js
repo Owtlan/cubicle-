@@ -1,12 +1,16 @@
 const router = require('express').Router()
 const authService = require('../services/authService')
 
+const isAuthenticated = require('../middlewares/isAuthenticated')
 
-router.get('/login', (req, res) => {
+const isGuest = require('../middlewares/isGuest')
+
+
+router.get('/login', isGuest, (req, res) => {
     res.render('login')
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', isGuest, async (req, res) => {
 
     const { username, password } = req.body
 
@@ -21,12 +25,12 @@ router.post('/login', async (req, res) => {
 })
 
 
-router.get('/register', (req, res) => {
+router.get('/register', isGuest, (req, res) => {
     res.render('register')
 })
 
 
-router.post('/register', async (req, res) => {
+router.post('/register', isGuest, async (req, res) => {
     const { username, password, repeatPassword } = req.body
 
     if (password !== repeatPassword) {
@@ -39,8 +43,14 @@ router.post('/register', async (req, res) => {
 
         res.redirect('/auth/login')
     } catch (error) {
-        res.render('register', { error })
+        res.render('register', { error})
     }
+})
+
+router.get('/logout', isAuthenticated, (req, res) => {
+
+    res.clearCookie('USER_SESSION')
+    res.redirect('/products')
 })
 
 module.exports = router;
