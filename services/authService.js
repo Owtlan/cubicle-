@@ -6,11 +6,7 @@ const secret = 'navodohonosor'
 
 const register = async ({ username, password }) => {
 
-
-    let salt = await bcrypt.genSalt(saltRounds);
-    let hash = await bcrypt.hash(password, salt)
-
-    const user = new User({ username, password: hash });
+    const user = new User({ username, password });
 
     return await user.save()
 }

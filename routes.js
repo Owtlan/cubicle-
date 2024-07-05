@@ -10,6 +10,8 @@ const authControler = require('./controllers/authController')
 
 const router = Router()
 
+
+
 router.use('/', homeController)
 router.use('/auth', authControler)
 router.use('/products', productController)

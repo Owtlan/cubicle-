@@ -1,12 +1,11 @@
 const router = require('express').Router()
 const authService = require('../services/authService')
 const validator = require('validator')
-const { check, validationResult } = require('express-validator')
+const { body, validationResult } = require('express-validator')
 
 const isAuthenticated = require('../middlewares/isAuthenticated')
 
 const isGuest = require('../middlewares/isGuest')
-
 
 router.get('/login', isGuest, (req, res) => {
     res.render('login')
@@ -53,9 +52,10 @@ const isStrongPasswordMiddleware = (req, res, next) => {
 }
 
 router.post('/register', isGuest,
+    body('email', 'Your email is not valid').isEmail().normalizeEmail(),
     // isStrongPasswordMiddleware,
-    check('username', 'Specify username').notEmpty(),
-    check('password', 'Password to short').isLength({ min: 5 }),
+    body('username', 'Specify username').notEmpty(),
+    body('password', 'Password to short').isLength({ min: 5 }),
     async (req, res) => {
         const { username, password, repeatPassword } = req.body
 
@@ -65,7 +65,7 @@ router.post('/register', isGuest,
 
         let errors = validationResult(req);
         if (errors.errors.length > 0) {
-          
+
             return res.render('register', errors)
         }
         try {
