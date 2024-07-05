@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const authService = require('../services/authService')
 const validator = require('validator')
-
+const { check, validationResult } = require('express-validator')
 
 const isAuthenticated = require('../middlewares/isAuthenticated')
 
@@ -46,28 +46,36 @@ const isStrongPasswordMiddleware = (req, res, next) => {
 
 
     if (!isStrongPassword) {
-        return res.render('register', { message: 'You should have strong password' })
+        return res.render('register', { error: { message: 'You should have strong password' }, username: req.body.username })
     }
 
     next()
 }
 
-router.post('/register', isGuest, isStrongPasswordMiddleware, async (req, res) => {
-    const { username, password, repeatPassword } = req.body
+router.post('/register', isGuest,
+    // isStrongPasswordMiddleware,
+    check('username', 'Specify username').notEmpty(),
+    check('password', 'Password to short').isLength({ min: 5 }),
+    async (req, res) => {
+        const { username, password, repeatPassword } = req.body
 
-    if (password !== repeatPassword) {
-        return res.render('register', { message: 'Password missmatch!' })
+        if (password !== repeatPassword) {
+            return res.render('register', { message: 'Password missmatch!' })
+        }
 
-    }
+        let errors = validationResult(req);
+        if (errors.errors.length > 0) {
+          
+            return res.render('register', errors)
+        }
+        try {
+            let user = await authService.register({ username, password })
 
-    try {
-        let user = await authService.register({ username, password })
-
-        res.redirect('/auth/login')
-    } catch (error) {
-        res.render('register', { error })
-    }
-})
+            res.redirect('/auth/login')
+        } catch (error) {
+            res.render('register', { error })
+        }
+    })
 
 router.get('/logout', isAuthenticated, (req, res) => {
 
