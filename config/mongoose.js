@@ -2,10 +2,17 @@ const mongoose = require('mongoose');
 
 
 module.exports = () => {
-    mongoose.connect('mongodb://127.0.0.1:27017/cubicle')
+  mongoose.connect('mongodb://127.0.0.1:27017/cubicle')
+
+
     .then(() => console.log('DB Connected'))
     .catch(err => console.log('DB Error,', err.message));
 
+
+
+    mongoose.set('userNewUrlParser', true)
+    mongoose.set('useFindAndModify', false)
+    mongoose.set('useCreateIndex', true)
 }
 
 
